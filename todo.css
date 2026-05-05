@@ -1,17 +1,27 @@
 body {
   font-family: sans-serif;
-  background-color: #f4f4f4;
+  background-color: #121212; /* Grigio quasi nero, molto riposante */
+  color: #e0e0e0;           /* Bianco sporco per non accecare */
   display: flex;
   justify-content: center;
   padding-top: 50px;
 }
 
 .container {
-  background: white;
+  background: #1e1e1e;      /* Leggermente più chiaro del body per creare stacco */
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Ombra più scura */
   width: 300px;
+}
+
+#add-btn {
+  background-color: #27ae60; /* Verde leggermente più brillante per risaltare */
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 ul {
@@ -20,23 +30,26 @@ ul {
 }
 
 li {
-  background: #eee;
+  background: #2d2d2d;      /* Ancora più chiaro del container per distinguere le righe */
   margin: 5px 0;
   padding: 10px;
   display: flex;
   justify-content: space-between;
+  border-radius: 4px;
+  color: #ffffff;
   cursor: pointer;
 }
 
 .completed {
   text-decoration: line-through;
-  color: gray;
+  color: #757575;          /* Grigio per indicare che è completato */
 }
 
 .delete-btn {
   background: #ff4d4d;
   color: white;
   border: none;
-  padding: 5px;
+  padding: 5px 10px;
   cursor: pointer;
+  border-radius: 4px;
 }

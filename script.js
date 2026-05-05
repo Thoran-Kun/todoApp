@@ -14,9 +14,13 @@ function addTask() {
     return
   }
 
+  //creo un nuovo div per contenere il task e il bottone di cancellazione, così da poterli gestire insieme
+  const div = document.createElement("div")
+  div.className = "task-container"
+
   //Creo un nuovo elemento <li>
-  const li = document.createElement("li")
-  li.innerText = taskText
+  const span = document.createElement("span")
+  span.innerText = taskText
 
   //Creo un nuovo bottone per poter cancellar il task
   const deleteBtn = document.createElement("button")
@@ -25,17 +29,18 @@ function addTask() {
 
   //Aggiungiamo la logica al bottone per poter cancellare
   deleteBtn.onclick = function () {
-    li.remove() //Rimuove l'intero li appena creato
+    div.remove() //Rimuove l'intero div appena creato
   }
 
   //Aggiungiamo il click sul testo per segnarlo come "completato"
-  li.onclick = function () {
-    li.classList.toggle("completed")
+  span.onclick = function () {
+    span.classList.toggle("completed")
   }
 
   //Mettiamo il bottone "X" dentro il task e il task dentro la lista
-  li.appendChild(deleteBtn)
-  todoList.appendChild(li)
+  div.appendChild(span)
+  div.appendChild(deleteBtn)
+  todoList.appendChild(div)
 
   //Puliamo l'input per il prossimo task
   input.value = ""
