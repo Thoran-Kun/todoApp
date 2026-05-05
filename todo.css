@@ -41,8 +41,8 @@ li {
 }
 
 .completed {
-  text-decoration: line-through;
-  color: #757575;          /* Grigio per indicare che è completato */
+  color: #757575;
+  opacity: 0.7;          /* Grigio per indicare che è completato */
 }
 
 .delete-btn {

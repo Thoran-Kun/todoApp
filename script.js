@@ -15,10 +15,16 @@ function addTask() {
   }
 
   //creo un nuovo div per contenere il task e il bottone di cancellazione, così da poterli gestire insieme
-  const div = document.createElement("div")
-  div.className = "task-container"
+  const li = document.createElement("li")
+  li.className = "task-container"
 
-  //Creo un nuovo elemento <li>
+
+  //creo una checkbox per poter segnare il task come completato
+  const checkbox = document.createElement("input")
+  checkbox.type = "checkbox"
+  checkbox.className = "task-checkbox"
+
+  //Creo un nuovo elemento <span> per il testo del task
   const span = document.createElement("span")
   span.innerText = taskText
 
@@ -27,9 +33,19 @@ function addTask() {
   deleteBtn.innerText = "X"
   deleteBtn.className = "delete-btn"
 
+  //LOGICA EVENTI
+  checkbox.onchange = function () {
+    span.classList.toggle("completed", checkbox.checked) //Aggiunge o rimuove la classe "completed" in base allo stato della checkbox
+  }
+
+span.onclick = function () {
+    span.classList.toggle("completed")
+    checkbox.checked = span.classList.contains("completed") //Aggiunge o rimuove la classe "completed" quando si clicca sul testo
+}
+
   //Aggiungiamo la logica al bottone per poter cancellare
   deleteBtn.onclick = function () {
-    div.remove() //Rimuove l'intero div appena creato
+    li.remove() //Rimuove l'intero div appena creato
   }
 
   //Aggiungiamo il click sul testo per segnarlo come "completato"
@@ -38,9 +54,10 @@ function addTask() {
   }
 
   //Mettiamo il bottone "X" dentro il task e il task dentro la lista
-  div.appendChild(span)
-  div.appendChild(deleteBtn)
-  todoList.appendChild(div)
+  li.appendChild(checkbox)
+  li.appendChild(span)
+  li.appendChild(deleteBtn)
+  todoList.appendChild(li)
 
   //Puliamo l'input per il prossimo task
   input.value = ""
