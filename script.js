@@ -1,73 +1,109 @@
-//Targetto gli elementi del DOM e li salvo in costanti
+// Targetto gli elementi del DOM e li salvo in costanti
 const input = document.getElementById("todo-input");
 const addButton = document.getElementById("add-btn");
 const todoList = document.getElementById("todo-list");
 
-//Ora definiso quello che succede quando aggiungiamo un task
-function addTask() {
-  //recupero il valore nel campo delll'input
-  const taskText = input.value;
+// Array per memorizzare lo stato dei task
+let tasks = [];
 
-  //Controllo di sicurezza, se l'input è vuoto non fare nulla
-  if (taskText.trim() === "") {
-    alert("Prima aggiuni qualcosa");
+// Carica i task salvati all'avvio della pagina
+function loadTasks() {
+  const saved = localStorage.getItem("todos");
+  if (saved) {
+    tasks = JSON.parse(saved);
+  }
+  renderTasks();
+}
+
+// Salva l'array di task attuale nel localStorage
+function saveTasks() {
+  localStorage.setItem("todos", JSON.stringify(tasks));
+}
+
+// Funzione che disegna i task nella pagina a partire dall'array 'tasks'
+function renderTasks() {
+  todoList.innerHTML = ""; // Pulisce la lista prima di ridisegnarla
+
+  tasks.forEach((task) => {
+    const li = document.createElement("li");
+    li.className = "task-container";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.className = "task-checkbox";
+    checkbox.checked = task.completed;
+
+    const span = document.createElement("span");
+    span.innerText = task.text;
+    if (task.completed) {
+      span.classList.add("completed");
+    }
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerText = "X";
+    deleteBtn.className = "delete-btn";
+
+    // LOGICA EVENTI
+    checkbox.onchange = function () {
+      task.completed = checkbox.checked;
+      span.classList.toggle("completed", task.completed);
+      saveTasks();
+    };
+
+    span.onclick = function () {
+      task.completed = !task.completed;
+      checkbox.checked = task.completed;
+      span.classList.toggle("completed", task.completed);
+      saveTasks();
+    };
+
+    deleteBtn.onclick = function () {
+      tasks = tasks.filter((t) => t.id !== task.id); // Rimuove il task dall'array
+      saveTasks();
+      renderTasks(); // Ridisegna la lista
+    };
+
+    li.appendChild(checkbox);
+    li.appendChild(span);
+    li.appendChild(deleteBtn);
+    todoList.appendChild(li);
+  });
+}
+
+// Definisco quello che succede quando aggiungiamo un task
+function addTask() {
+  const taskText = input.value.trim();
+
+  // Controllo di sicurezza, se l'input è vuoto non fare nulla
+  if (taskText === "") {
+    alert("Prima aggiungi qualcosa");
     return;
   }
 
-  //creo un nuovo div per contenere il task e il bottone di cancellazione, così da poterli gestire insieme
-  const li = document.createElement("li");
-  li.className = "task-container";
-
-  //creo una checkbox per poter segnare il task come completato
-  const checkbox = document.createElement("input");
-  checkbox.type = "checkbox";
-  checkbox.className = "task-checkbox";
-
-  //Creo un nuovo elemento <span> per il testo del task
-  const span = document.createElement("span");
-  span.innerText = taskText;
-
-  //Creo un nuovo bottone per poter cancellar il task
-  const deleteBtn = document.createElement("button");
-  deleteBtn.innerText = "X";
-  deleteBtn.className = "delete-btn";
-
-  //LOGICA EVENTI
-  checkbox.onchange = function () {
-    span.classList.toggle("completed", checkbox.checked); //Aggiunge o rimuove la classe "completed" in base allo stato della checkbox
+  // Creo il nuovo oggetto task con id unico
+  const newTask = {
+    id: Date.now(),
+    text: taskText,
+    completed: false,
   };
 
-  span.onclick = function () {
-    span.classList.toggle("completed");
-    checkbox.checked = span.classList.contains("completed"); //Aggiunge o rimuove la classe "completed" quando si clicca sul testo
-  };
+  tasks.push(newTask);
+  saveTasks();
+  renderTasks();
 
-  //Aggiungiamo la logica al bottone per poter cancellare
-  deleteBtn.onclick = function () {
-    li.remove(); //Rimuove l'intero div appena creato
-  };
-
-  //Aggiungiamo il click sul testo per segnarlo come "completato"
-  span.onclick = function () {
-    span.classList.toggle("completed");
-  };
-
-  //Mettiamo il bottone "X" dentro il task e il task dentro la lista
-  li.appendChild(checkbox);
-  li.appendChild(span);
-  li.appendChild(deleteBtn);
-  todoList.appendChild(li);
-
-  //Puliamo l'input per il prossimo task
+  // Puliamo l'input per il prossimo task
   input.value = "";
 }
 
-//Ascoltiamo il click sul bottone
+// Ascoltiamo il click sul bottone
 addButton.addEventListener("click", addTask);
 
-//Opzionale: permette di premere "INVIO" dalla tastiera anzi che cliccare sul bottone
+// Permette di premere "INVIO" dalla tastiera
 input.addEventListener("keypress", function (e) {
   if (e.key === "Enter") {
     addTask();
   }
 });
+
+// Carichiamo i task salvati non appena la pagina è pronta
+document.addEventListener("DOMContentLoaded", loadTasks);
